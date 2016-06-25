@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = "A simple top reflesh control for scrollview/tableview."
   s.homepage     = "https://github.com/jacoli/FMTopRefleshControl"
   s.license      = "MIT"
-  s.authors      = { "jacoli" => "luckylcg@163.com" }
+  s.authors      = { "jacoli" => "jaco.lcg@gmail.com" }
   s.source       = { :git => "https://github.com/jacoli/FMTopRefleshControl.git", :tag => "0.0.1" }
   s.frameworks   = 'Foundation', 'UIKit'
   s.platform     = :ios, '7.0'
