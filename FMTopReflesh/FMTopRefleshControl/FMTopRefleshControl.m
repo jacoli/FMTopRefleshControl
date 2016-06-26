@@ -9,9 +9,9 @@
 #import "FMTopRefleshControl.h"
 
 #define FM_REFLESH_TOP_INSET (64)
-#define FM_RELEASE_TO_REFLESH_TOP_INSET (FM_REFLESH_TOP_INSET + 10)
+#define FM_RELEASE_TO_REFLESH_TOP_INSET (FM_REFLESH_TOP_INSET + 20)
 
-static char __stateDesc[4][64] = {"kFMRefleshStateNone", "kFMRefleshStatePossible", "kFMRefleshStateReleaseToReflesh", "kFMRefleshStateRefleshing"};
+static char __stateDesc[4][30] = {"None", "Possible", "ReleaseToReflesh", "Refleshing"};
 
 typedef NS_ENUM(NSInteger, FMRefleshState) {
     kFMRefleshStateNone = 0,
@@ -23,11 +23,8 @@ typedef NS_ENUM(NSInteger, FMRefleshState) {
 @interface FMTopRefleshControl ()
 
 @property (nonatomic, assign) FMRefleshState state;
-
 @property (nonatomic, strong) UIScrollView *scrollView;
-
 @property (nonatomic, strong) UIView<FMTopRefleshControlTopView> *topRefleshView;
-
 @property (nonatomic, copy) void(^refleshCallback)(FMTopRefleshControl *control);
 
 @end
@@ -92,33 +89,44 @@ typedef NS_ENUM(NSInteger, FMRefleshState) {
 }
 
 - (void)scrollViewContentOffsetChanged {
+    
+    //NSLog(@"%f, %f", self.scrollView.contentOffset.y, self.scrollView.contentInset.top);
+    
+    if (!self.scrollView.dragging && !self.scrollView.decelerating) {
+        return;
+    }
+    
     switch (self.state) {
     case kFMRefleshStateNone:
-            if (self.scrollView.contentOffset.y < 0) {
+            if (self.scrollView.contentOffset.y < -self.scrollView.contentInset.top) {
                 self.state = kFMRefleshStatePossible;
             }
         break;
     case kFMRefleshStatePossible:
-            if (self.scrollView.contentOffset.y <= -FM_RELEASE_TO_REFLESH_TOP_INSET) {
+            if (self.scrollView.contentOffset.y <= -FM_RELEASE_TO_REFLESH_TOP_INSET - self.scrollView.contentInset.top) {
                 self.state = kFMRefleshStateReleaseToReflesh;
             }
-            else if (self.scrollView.contentOffset.y >= 0) {
+            else if (self.scrollView.contentOffset.y >= -self.scrollView.contentInset.top) {
                 self.state = kFMRefleshStateNone;
             }
         break;
     case kFMRefleshStateReleaseToReflesh:
             if (self.scrollView.decelerating) {
                 self.state = kFMRefleshStateRefleshing;
+                
+                CGFloat offsetY = self.scrollView.contentOffset.y;
                 UIEdgeInsets insets = self.scrollView.contentInset;
-                insets.top = FM_REFLESH_TOP_INSET;
+                insets.top += FM_REFLESH_TOP_INSET;
                 self.scrollView.contentInset = insets;
+                self.scrollView.contentOffset = CGPointMake(0, offsetY);
+                [self.scrollView setContentOffset:CGPointMake(0, -insets.top) animated:YES];
                 
                 if (self.refleshCallback) {
                     self.refleshCallback(self);
                 }
             }
             else {
-                if (self.scrollView.contentOffset.y > -FM_REFLESH_TOP_INSET) {
+                if (self.scrollView.contentOffset.y > -FM_RELEASE_TO_REFLESH_TOP_INSET - self.scrollView.contentInset.top) {
                     self.state = kFMRefleshStatePossible;
                 }
             }
@@ -134,7 +142,7 @@ typedef NS_ENUM(NSInteger, FMRefleshState) {
     if (self.state == kFMRefleshStateRefleshing) {
         self.state = kFMRefleshStateNone;
         UIEdgeInsets insets = self.scrollView.contentInset;
-        insets.top = 0;
+        insets.top -= FM_REFLESH_TOP_INSET;
         [UIView animateWithDuration:0.3 animations:^{
             self.scrollView.contentInset = insets;
         }];

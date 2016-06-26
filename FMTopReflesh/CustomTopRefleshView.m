@@ -11,6 +11,7 @@
 @interface CustomTopRefleshView ()
 
 @property (nonatomic, strong) UIImageView *indicator;
+@property (nonatomic, strong) UILabel *textLabel;
 
 @end
 
@@ -18,9 +19,18 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor greenColor];
+        self.backgroundColor = [UIColor redColor];
         
-        UIImageView *v = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) / 2 - 12, CGRectGetHeight(self.frame) - 24 - 12, 24, 24)];
+        [self addSubview:self.indicator];
+        [self addSubview:self.textLabel];
+    }
+    
+    return self;
+}
+
+- (UIImageView *)indicator {
+    if (!_indicator) {
+        UIImageView *v = [[UIImageView alloc] initWithFrame:CGRectZero];
         [self addSubview:v];
         
         NSMutableArray *imgs = [[NSMutableArray alloc] init];
@@ -29,28 +39,48 @@
         }
         v.animationImages = imgs;
         
-        self.indicator = v;
+        _indicator = v;
     }
     
-    return self;
+    return _indicator;
+}
+
+- (UILabel *)textLabel {
+    if (!_textLabel) {
+        _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _textLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
+    return _textLabel;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.textLabel.frame = CGRectMake(CGRectGetWidth(self.bounds) / 2 - 100, CGRectGetHeight(self.frame) - 24 - 20, 200, 24);
+    self.indicator.frame = CGRectMake(CGRectGetMinX(self.textLabel.frame) - 24, CGRectGetHeight(self.frame) - 24 - 20, 24, 24);
 }
 
 - (void)pullToReflesh {
-    self.backgroundColor = [UIColor blueColor];
+    //self.backgroundColor = [UIColor blueColor];
+    self.textLabel.text = @"pull to relfesh";
 }
 
 - (void)releaseToReflesh {
-    self.backgroundColor = [UIColor yellowColor];
+    //self.backgroundColor = [UIColor yellowColor];
+    self.textLabel.text = @"release to relfesh";
 }
 
 - (void)startReflesh {
-    self.backgroundColor = [UIColor redColor];
+    //self.backgroundColor = [UIColor redColor];
     [self.indicator startAnimating];
+    self.textLabel.text = @"relfesh...";
 }
 
 - (void)refleshFinished {
-    self.backgroundColor = [UIColor grayColor];
+    //self.backgroundColor = [UIColor whiteColor];
     [self.indicator stopAnimating];
+    self.textLabel.text = nil;
 }
 
 @end
