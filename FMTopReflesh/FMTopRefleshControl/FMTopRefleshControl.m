@@ -54,7 +54,14 @@ typedef NS_ENUM(NSInteger, FMRefleshState) {
 }
 
 - (void)dealloc {
-    [_scrollView removeObserver:self forKeyPath:@"contentOffset"];
+    if (self.state == kFMRefleshStateRefleshing) {
+        self.state = kFMRefleshStateNone;
+        UIEdgeInsets insets = self.scrollView.contentInset;
+        insets.top -= FM_REFLESH_TOP_INSET;
+        self.scrollView.contentInset = insets;
+    }
+    [self.topRefleshView removeFromSuperview];
+    [self.scrollView removeObserver:self forKeyPath:@"contentOffset"];
 }
 
 - (void)setState:(FMRefleshState)state {
@@ -89,9 +96,6 @@ typedef NS_ENUM(NSInteger, FMRefleshState) {
 }
 
 - (void)scrollViewContentOffsetChanged {
-    
-    //NSLog(@"%f, %f", self.scrollView.contentOffset.y, self.scrollView.contentInset.top);
-    
     if (!self.scrollView.dragging && !self.scrollView.decelerating) {
         return;
     }

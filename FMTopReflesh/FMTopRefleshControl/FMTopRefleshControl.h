@@ -23,6 +23,14 @@
 
 @interface FMTopRefleshControl : NSObject
 
+/**
+ Initializer
+
+ @param scrollView A scroll view added a reflesh control, retained, shouldn't retain FMTopRefleshControl avoid retain recycle.
+ @param refleshCallback Callback called when reflesh triggered.
+ @param topView A view implement FMTopRefleshControlTopView protocol.
+ @return instance
+ */
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView withRefleshCallback:(void(^)(FMTopRefleshControl *control))refleshCallback withTopView:(UIView<FMTopRefleshControlTopView> *)topView;
 
 - (void)endReflesh;
