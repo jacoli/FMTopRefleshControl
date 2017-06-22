@@ -1,0 +1,7 @@
+language: objective-c
+osx_image: xcode7
+xcode_project: FMTopReflesh.xcodeproj
+xcode_scheme: FMTopReflesh
+
+script:
+- xctool -project FMTopReflesh.xcodeproj -scheme FMTopReflesh build test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
