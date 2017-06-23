@@ -1,6 +1,7 @@
 # Top Reflesh Control
 ![License](https://img.shields.io/cocoapods/l/TWPhotoPicker.svg)
 ![Platform](https://img.shields.io/cocoapods/p/TWPhotoPicker.svg)
+[![Build Status](https://travis-ci.org/jacoli/FMTopRefleshControl.svg?branch=master)](https://travis-ci.org/jacoli/FMTopRefleshControl)
 
 A simple top reflesh control for scrollview/tableview.
 
