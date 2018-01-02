@@ -23,10 +23,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    CGRect frame = self.view.bounds;
     
-    UITableView *v = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    UITableView *v = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
     v.delegate = self;
     v.dataSource = self;
+    if (@available(iOS 11.0, *)) {
+        v.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        v.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+    } else {
+        // Fallback on earlier versions
+    }
     [v registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     [self.view addSubview:v];
  
@@ -35,7 +42,13 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [control endReflesh];
         });
-    } withTopView:[[CustomTopRefleshView alloc] initWithFrame:[UIScreen mainScreen].bounds]];
+    }];
+    
+//    self.refleshControl = [[FMTopRefleshControl alloc] initWithScrollView:v withRefleshCallback:^(FMTopRefleshControl *control) {
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [control endReflesh];
+//        });
+//    } withTopView:[[CustomTopRefleshView alloc] initWithFrame:CGRectMake(0, 0, 400, 64)]];
 }
 
 - (void)didReceiveMemoryWarning {

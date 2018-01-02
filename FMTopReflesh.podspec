@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FMTopReflesh"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "A simple top reflesh control for scrollview/tableview."
   s.homepage     = "https://github.com/jacoli/FMTopRefleshControl"
   s.license      = "MIT"

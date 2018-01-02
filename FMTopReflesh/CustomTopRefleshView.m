@@ -19,7 +19,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor redColor];
+        //self.backgroundColor = [UIColor redColor];
         
         [self addSubview:self.indicator];
         [self addSubview:self.textLabel];
